@@ -28,6 +28,11 @@ import com.joysistvi.recording.view.ArtistView;
 import com.joysistvi.recording.view.SongView;
 import com.joysistvi.recording.view.UserView;
 
+import com.joysistvi.recording.controller.PlaylistController;
+import com.joysistvi.recording.repository.PlaylistRepository;
+import com.joysistvi.recording.repository.PlaylistRepositoryImpl;
+import com.joysistvi.recording.service.PlaylistService;
+import com.joysistvi.recording.view.PlaylistView;
 
 public class Application {
 
@@ -41,26 +46,28 @@ public class Application {
         SongRepository songRepository = new SongRepositoryImpl(dbConnection);
         SongService songService = new SongService(songRepository);
         SongController songController = new SongController(songService);
-        SongView songView = new SongView(songController);
-
 
         ArtistRepository artistRepository = new ArtistRepositoryImpl(dbConnection);
         ArtistService artistService = new ArtistService(artistRepository);
         ArtistController artistController = new ArtistController(artistService);
         ArtistView artistView = new ArtistView(artistController);
 
-
         AlbumRepository albumRepository = new AlbumRepositoryImpl(dbConnection);
         AlbumService albumService = new AlbumService(albumRepository);
         AlbumController albumController = new AlbumController(albumService);
-        AlbumView albumView = new AlbumView(albumController);
+        AlbumView albumView = new AlbumView(albumController, artistController);
 
+        SongView songView = new SongView(songController, albumController);
 
         UserRepository userRepository = new UserRepositoryImpl(dbConnection);
         UserService userService = new UserService(userRepository);
         UserController userController = new UserController(userService);
         UserView userView = new UserView(userController);
 
+        PlaylistRepository playlistRepository = new PlaylistRepositoryImpl(dbConnection);
+        PlaylistService playlistService = new PlaylistService(playlistRepository);
+        PlaylistController playlistController = new PlaylistController(playlistService);
+        PlaylistView playlistView = new PlaylistView(playlistController, userController);
 
         Scanner scanner = new Scanner(System.in);
 
@@ -75,7 +82,8 @@ public class Application {
             System.out.println("2. Artist");
             System.out.println("3. Album");
             System.out.println("4. User");
-            System.out.println("5. Exit");
+            System.out.println("5. Playlist");
+            System.out.printf("6. Exit\n");
             System.out.print("Enter choice: ");
 
             try {
@@ -103,6 +111,10 @@ public class Application {
                     break;
 
                 case 5:
+                    playlistView.showMenu();
+                    break;
+
+                case 6:
                     System.out.println("Thank you for using the system!");
                     break;
 
@@ -110,7 +122,7 @@ public class Application {
                     System.out.println("Invalid choice!");
             }
 
-        } while (choice != 5);
+        } while (choice != 6);
 
     }
 }

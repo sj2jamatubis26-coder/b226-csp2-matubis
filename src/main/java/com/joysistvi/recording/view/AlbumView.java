@@ -2,6 +2,8 @@ package com.joysistvi.recording.view;
 
 import com.joysistvi.recording.controller.AlbumController;
 import com.joysistvi.recording.model.Album;
+import com.joysistvi.recording.controller.ArtistController;
+import com.joysistvi.recording.model.Artist;
 
 import java.util.List;
 import java.util.Scanner;
@@ -9,15 +11,19 @@ import java.util.Scanner;
 public class AlbumView {
 
     private final AlbumController albumController;
+    private final ArtistController artistController;
     private final Scanner scanner = new Scanner(System.in);
 
     // Constructor injection
-    public AlbumView(AlbumController albumController) {
+    public AlbumView(AlbumController albumController,
+                     ArtistController artistController) {
+
         this.albumController = albumController;
+        this.artistController = artistController;
     }
 
     public void showMenu() {
-        int choice;
+        int choice = -1;
         do {
             System.out.println("\n===== ALBUM MENU =====");
             System.out.println("1. Add Album");
@@ -26,12 +32,16 @@ public class AlbumView {
             System.out.println("4. Delete Album");
             System.out.println("5. Archive Album");
             System.out.println("6. Restore Album");
-            System.out.println("7. View Archived Albums");
-            System.out.println("8. Search Album");
+            System.out.println("7. Search Album");
             System.out.println("0. Back to Main Menu");
             System.out.print("Enter choice: ");
-            choice = scanner.nextInt();
-            scanner.nextLine(); // consume newline
+            try {
+                choice = Integer.parseInt(scanner.nextLine());
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Please enter a number.");
+                continue;
+            }
+
 
             switch (choice) {
                 case 0: {
@@ -48,8 +58,14 @@ public class AlbumView {
                     int year = scanner.nextInt();
 
                     System.out.print("Artist ID: ");
-                    int artistId = scanner.nextInt();
-                    scanner.nextLine();
+                    int artistId;
+
+                    try {
+                        artistId = Integer.parseInt(scanner.nextLine());
+                    } catch (NumberFormatException e) {
+                        System.out.println("Invalid Artist ID. Please enter a number.");
+                        break;
+                    }
 
                     if (albumController.addAlbum(name, year, artistId)) {
                         System.out.println("Album added successfully.");
@@ -69,22 +85,56 @@ public class AlbumView {
                 }
 
                 case 3: {
+
                     System.out.println("=== Update Album ===");
+                    System.out.println("\nAvailable Albums:");
+
+                    for (Album album : albumController.listAlbums()) {
+                        System.out.println(album);
+                    }
+
+                    System.out.println();
 
                     System.out.print("Enter Album ID: ");
-                    int id = scanner.nextInt();
-                    scanner.nextLine();
+                    int id;
+
+                    try {
+                        id = Integer.parseInt(scanner.nextLine());
+                    } catch (NumberFormatException e) {
+                        System.out.println("Invalid Album ID. Please enter a number.");
+                        break;
+                    }
 
                     System.out.print("New Name: ");
                     String name = scanner.nextLine();
 
                     System.out.print("New Year: ");
-                    int year = scanner.nextInt();
-                    scanner.nextLine();
+                    int year;
+
+                    try {
+                        year = Integer.parseInt(scanner.nextLine());
+                    } catch (NumberFormatException e) {
+                        System.out.println("Invalid Year. Please enter a number.");
+                        break;
+                    }
+
+                    System.out.println("\n=== Available Artists ===");
+
+                    for (Artist artist : artistController.listArtists()) {
+                        System.out.println(artist);
+                    }
+
+                    System.out.println();
 
                     System.out.print("New Artist ID: ");
-                    int artistId = scanner.nextInt();
-                    scanner.nextLine();
+                    int artistId;
+
+                    try {
+                        artistId = Integer.parseInt(scanner.nextLine());
+                    } catch (NumberFormatException e) {
+                        System.out.println("Invalid Artist ID. Please enter a number.");
+                        break;
+                    }
 
                     if (albumController.updateAlbum(name, year, artistId, id)) {
                         System.out.println("Album updated successfully.");
@@ -95,16 +145,39 @@ public class AlbumView {
                     break;
                 }
                 case 4: {
-                    System.out.println("=== Delete Album ===");
 
-                    System.out.print("Enter Album ID: ");
-                    int id = scanner.nextInt();
-                    scanner.nextLine();
+                    System.out.println("\nAvailable Albums:");
 
-                    if (albumController.deleteAlbum(id)) {
-                        System.out.println("Album deleted successfully.");
+                    for (Album album : albumController.listAlbums()) {
+                        System.out.println(album);
+                    }
+
+                    System.out.print("\nEnter Album ID to delete: ");
+                    int id;
+
+                    try {
+                        id = Integer.parseInt(scanner.nextLine());
+
+                    } catch (NumberFormatException e) {
+                        System.out.println("Invalid Album ID. Please enter a number.");
+                        break;
+                    }
+
+                    System.out.print("Are you sure you want to delete this album? (Y/N): ");
+                    String confirm = scanner.nextLine();
+
+                    if (confirm.equalsIgnoreCase("Y")) {
+
+                        if (albumController.deleteAlbum(id)) {
+                            System.out.println("Album deleted successfully.");
+                        } else {
+                            System.out.println("Failed to delete album.");
+                        }
+
                     } else {
-                        System.out.println("Failed to delete Album.");
+
+                        System.out.println("Delete cancelled.");
+
                     }
 
                     break;
@@ -112,10 +185,24 @@ public class AlbumView {
                 case 5: {
 
                     System.out.println("=== Archive Album ===");
+                    System.out.println("\nAvailable Albums:");
+
+                    for (Album album : albumController.listAlbums()) {
+                        System.out.println(album);
+                    }
+
+                    System.out.println();
 
                     System.out.print("Enter Album ID: ");
-                    int id = scanner.nextInt();
-                    scanner.nextLine();
+
+                    int id;
+
+                    try {
+                        id = Integer.parseInt(scanner.nextLine());
+                    } catch (NumberFormatException e) {
+                        System.out.println("Invalid Album ID. Please enter a number.");
+                        break;
+                    }
 
                     if (albumController.archiveAlbum(id)) {
                         System.out.println("Album archived successfully.");
@@ -135,8 +222,14 @@ public class AlbumView {
                     }
 
                     System.out.print("Enter Album ID: ");
-                    int id = scanner.nextInt();
-                    scanner.nextLine();
+                    int id;
+
+                    try {
+                        id = Integer.parseInt(scanner.nextLine());
+                    } catch (NumberFormatException e) {
+                        System.out.println("Invalid Album ID. Please enter a number.");
+                        break;
+                    }
 
                     if (albumController.restoreAlbum(id)) {
                         System.out.println("Album restored successfully.");
@@ -146,18 +239,8 @@ public class AlbumView {
 
                     break;
                 }
+
                 case 7: {
-
-                    System.out.println("=== Archived Albums ===");
-
-                    for (Album album : albumController.listArchivedAlbums()) {
-                        System.out.println(album);
-                    }
-
-                    break;
-                }
-
-                case 8: {
 
                     System.out.println("=== Search Album ===");
 

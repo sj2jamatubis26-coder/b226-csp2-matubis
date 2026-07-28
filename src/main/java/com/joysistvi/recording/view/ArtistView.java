@@ -17,7 +17,7 @@ public class ArtistView {
     }
 
     public void showMenu() {
-        int choice;
+        int choice = -1;
         do {
             System.out.println("\n--- Artist Menu ---");
             System.out.println("1. Add Artist");
@@ -29,8 +29,12 @@ public class ArtistView {
             System.out.println("7. Search Artist");
             System.out.println("0. Back to Main Menu");
             System.out.print("Enter choice: ");
-            choice = scanner.nextInt();
-            scanner.nextLine(); // consume newline
+            try {
+                choice = Integer.parseInt(scanner.nextLine());
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Please enter a number.");
+                continue;
+            }
 
             switch (choice) {
                 case 0: {
@@ -60,16 +64,29 @@ public class ArtistView {
                     }
                     break;
                 }
-                default:
-                    System.out.println("Invalid choice");
+
                 case 3: {
+
                     System.out.println("=== Update Artist ===");
+                    System.out.println("\nAvailable Artists:");
 
+                    for (Artist artist : artistController.listArtists()) {
+                        System.out.println(artist);
+                    }
+
+                    System.out.println();
                     System.out.print("Enter Artist ID: ");
-                    int id = scanner.nextInt();
-                    scanner.nextLine();
 
-                    System.out.print("New Name: ");
+                    int id;
+
+                    try {
+                        id = Integer.parseInt(scanner.nextLine());
+                    } catch (NumberFormatException e) {
+                        System.out.println("Invalid Artist ID. Please enter a number.");
+                        break;
+                    }
+
+                    System.out.print("Enter New Artist Name: ");
                     String name = scanner.nextLine();
 
                     if (artistController.updateArtist(name, id)) {
@@ -81,16 +98,39 @@ public class ArtistView {
                     break;
                 }
                 case 4: {
-                    System.out.println("=== Delete Artist ===");
 
-                    System.out.print("Enter Artist ID: ");
-                    int id = scanner.nextInt();
-                    scanner.nextLine();
+                    System.out.println("\nAvailable Artists:");
 
-                    if (artistController.deleteArtist(id)) {
-                        System.out.println("Artist deleted successfully.");
+                    for (Artist artist : artistController.listArtists()) {
+                        System.out.println(artist);
+                    }
+
+                    System.out.print("\nEnter Artist ID to delete: ");
+                    int id;
+
+                    try {
+                        id = Integer.parseInt(scanner.nextLine());
+
+                    } catch (NumberFormatException e) {
+                        System.out.println("Invalid Artist ID. Please enter a number.");
+                        break;
+                    }
+
+                    System.out.print("Are you sure you want to delete this artist? (Y/N): ");
+                    String confirm = scanner.nextLine();
+
+                    if (confirm.equalsIgnoreCase("Y")) {
+
+                        if (artistController.deleteArtist(id)) {
+                            System.out.println("Artist deleted successfully.");
+                        } else {
+                            System.out.println("Failed to delete artist.");
+                        }
+
                     } else {
-                        System.out.println("Failed to delete artist.");
+
+                        System.out.println("Delete cancelled.");
+
                     }
 
                     break;
@@ -98,10 +138,23 @@ public class ArtistView {
                 case 5: {
 
                     System.out.println("=== Archive Artist ===");
+                    System.out.println("\nAvailable Artists:");
 
+                    for (Artist artist : artistController.listArtists()) {
+                        System.out.println(artist);
+                    }
+
+                    System.out.println();
                     System.out.print("Enter Artist ID: ");
-                    int id = scanner.nextInt();
-                    scanner.nextLine();
+
+                    int id;
+
+                    try {
+                        id = Integer.parseInt(scanner.nextLine());
+                    } catch (NumberFormatException e) {
+                        System.out.println("Invalid Artist ID. Please enter a number.");
+                        break;
+                    }
 
                     if (artistController.archiveArtist(id)) {
                         System.out.println("Artist archived successfully.");
@@ -121,8 +174,14 @@ public class ArtistView {
                     }
 
                     System.out.print("Enter Artist ID: ");
-                    int id = scanner.nextInt();
-                    scanner.nextLine();
+                    int id;
+
+                    try {
+                        id = Integer.parseInt(scanner.nextLine());
+                    } catch (NumberFormatException e) {
+                        System.out.println("Invalid Artist ID. Please enter a number.");
+                        break;
+                    }
 
                     if (artistController.restoreArtist(id)) {
                         System.out.println("Artist restored successfully.");
@@ -154,6 +213,8 @@ public class ArtistView {
 
                     break;
                 }
+                default:
+                    System.out.println("Invalid choice");
             }
         } while (choice != 0);
     }

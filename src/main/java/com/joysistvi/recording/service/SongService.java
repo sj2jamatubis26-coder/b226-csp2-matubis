@@ -16,8 +16,24 @@ public class SongService {
     }
 
     public boolean addSong(Song song) {
-        if (song.getTitle() == null || song.getTitle().isEmpty() ) {
-            System.out.println("Song title cannot be empty");
+
+        if (song.getTitle() == null || song.getTitle().trim().isEmpty()) {
+            System.out.println("Song title cannot be empty.");
+            return false;
+        }
+
+        if (song.getLength() == null || song.getLength().trim().isEmpty()) {
+            System.out.println("Song length cannot be empty.");
+            return false;
+        }
+
+        if (song.getGenre() == null || song.getGenre().trim().isEmpty()) {
+            System.out.println("Song genre cannot be empty.");
+            return false;
+        }
+
+        if (song.getAlbumId() <= 0) {
+            System.out.println("Invalid Album ID.");
             return false;
         }
 
@@ -28,13 +44,24 @@ public class SongService {
         return songRepo.getAllSongs();
     }
 
-    public boolean updateSong(String title, String length, String genre, int albumId) {
+    public boolean updateSong(String title, String length, String genre, int id) {
 
-        if (title == null || title.isEmpty()) {
-            System.out.println("Title cannot be empty. ");
+        if (title == null || title.trim().isEmpty()) {
+            System.out.println("Song title cannot be empty.");
             return false;
         }
-        return songRepo.updateSong(title, length, genre, albumId);
+
+        if (length == null || length.trim().isEmpty()) {
+            System.out.println("Song length cannot be empty.");
+            return false;
+        }
+
+        if (genre == null || genre.trim().isEmpty()) {
+            System.out.println("Song genre cannot be empty.");
+            return false;
+        }
+
+        return songRepo.updateSong(title, length, genre, id);
     }
 
     public boolean deleteSong(int id) {

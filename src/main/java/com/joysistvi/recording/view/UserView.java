@@ -17,7 +17,7 @@ public class UserView {
 
     public void showMenu() {
 
-        int choice;
+        int choice = -1;
 
         do {
             System.out.println("\n===== USER MENU =====");
@@ -27,23 +27,28 @@ public class UserView {
             System.out.println("4. Delete User");
             System.out.println("5. Archive User");
             System.out.println("6. Restore User");
-            System.out.println("7. View Archived Users");
-            System.out.println("8. Search User");
-            System.out.println("9. Back to Main Menu");
+            System.out.println("7. Search User");
+            System.out.println("8. Back to Main Menu");
             System.out.print("Choose option: ");
 
-            choice = Integer.parseInt(scanner.nextLine());
+            try {
+                choice = Integer.parseInt(scanner.nextLine());
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Please enter a number.");
+                continue;
+            }
+
 
             switch (choice) {
+                case 0 -> System.out.println("Returning...");
                 case 1 -> addUser();
                 case 2 -> viewUsers();
                 case 3 -> updateUser();
                 case 4 -> deleteUser();
                 case 5 -> archiveUser();
                 case 6 -> restoreUser();
-                case 7 -> viewArchivedUsers();
-                case 8 -> searchUser();
-                case 9 -> System.out.println("Returning...");
+                case 7 -> searchUser();
+
                 default -> System.out.println("Invalid choice!");
             }
 
@@ -96,71 +101,135 @@ public class UserView {
 
     private void updateUser() {
 
-        System.out.print("User ID: ");
-        int id = Integer.parseInt(scanner.nextLine());
+        System.out.println("\n=== Available Users ===");
 
-        System.out.print("First Name: ");
-        String firstName = scanner.nextLine();
+        List<User> users = userController.listUsers();
 
-        System.out.print("Last Name: ");
-        String lastName = scanner.nextLine();
+        if (users.isEmpty()) {
+            System.out.println("No users found.");
+            return;
+        }
 
-        System.out.print("Username: ");
-        String username = scanner.nextLine();
+        users.forEach(System.out::println);
 
-        System.out.print("Email: ");
-        String email = scanner.nextLine();
+        try {
 
-        System.out.print("Password: ");
-        String password = scanner.nextLine();
+            System.out.print("\nEnter User ID to update: ");
+            int id = Integer.parseInt(scanner.nextLine());
 
-        System.out.print("Role: ");
-        String role = scanner.nextLine();
+            System.out.print("First Name: ");
+            String firstName = scanner.nextLine();
 
-        boolean success = userController.updateUser(
-                firstName,
-                lastName,
-                username,
-                email,
-                password,
-                role,
-                id
-        );
+            System.out.print("Last Name: ");
+            String lastName = scanner.nextLine();
 
-        System.out.println(success ? "User updated successfully." : "Update failed.");
+            System.out.print("Username: ");
+            String username = scanner.nextLine();
+
+            System.out.print("Email: ");
+            String email = scanner.nextLine();
+
+            System.out.print("Password: ");
+            String password = scanner.nextLine();
+
+            System.out.print("Role: ");
+            String role = scanner.nextLine();
+
+            boolean success = userController.updateUser(
+                    firstName,
+                    lastName,
+                    username,
+                    email,
+                    password,
+                    role,
+                    id
+            );
+
+            System.out.println(success ?
+                    "User updated successfully." :
+                    "Update failed.");
+
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid ID. Please enter a number.");
+        }
     }
 
     private void deleteUser() {
 
-        System.out.print("User ID: ");
-        int id = Integer.parseInt(scanner.nextLine());
+        System.out.println("\n=== Available Users ===");
 
-        boolean success = userController.deleteUser(id);
+        List<User> users = userController.listUsers();
 
-        System.out.println(success ? "User deleted successfully." : "Delete failed.");
+        if (users.isEmpty()) {
+            System.out.println("No users found.");
+            return;
+        }
+
+        users.forEach(System.out::println);
+
+        try {
+
+            System.out.print("\nEnter User ID to delete: ");
+            int id = Integer.parseInt(scanner.nextLine());
+
+            System.out.print("Are you sure you want to delete this user? (Y/N): ");
+            String confirm = scanner.nextLine();
+
+            if (confirm.equalsIgnoreCase("Y")) {
+
+                boolean success = userController.deleteUser(id);
+
+                System.out.println(success ?
+                        "User deleted successfully." :
+                        "Delete failed.");
+
+            } else {
+
+                System.out.println("Delete cancelled.");
+
+            }
+
+        } catch (NumberFormatException e) {
+
+            System.out.println("Invalid ID. Please enter a number.");
+
+        }
     }
 
     private void archiveUser() {
 
-        System.out.print("User ID: ");
-        int id = Integer.parseInt(scanner.nextLine());
+        System.out.println("\n=== Available Users ===");
 
-        boolean success = userController.archiveUser(id);
+        List<User> users = userController.listUsers();
 
-        System.out.println(success ? "User archived successfully." : "Archive failed.");
+        if (users.isEmpty()) {
+            System.out.println("No users found.");
+            return;
+        }
+
+        users.forEach(System.out::println);
+
+        try {
+
+            System.out.print("\nEnter User ID to archive: ");
+            int id = Integer.parseInt(scanner.nextLine());
+
+            boolean success = userController.archiveUser(id);
+
+            System.out.println(success ?
+                    "User archived successfully." :
+                    "Archive failed.");
+
+        } catch (NumberFormatException e) {
+
+            System.out.println("Invalid ID. Please enter a number.");
+
+        }
     }
 
     private void restoreUser() {
 
-        System.out.print("User ID: ");
-        int id = Integer.parseInt(scanner.nextLine());
-
-        boolean success = userController.restoreUser(id);
-
-        System.out.println(success ? "User restored successfully." : "Restore failed.");
-    }
-
-    private void viewArchivedUsers() {
+        System.out.println("\n=== Restore User ===");
 
         List<User> users = userController.listArchivedUsers();
 
@@ -169,7 +238,26 @@ public class UserView {
             return;
         }
 
+        System.out.println("\nArchived Users:");
+
         users.forEach(System.out::println);
+
+        try {
+
+            System.out.print("\nEnter User ID to restore: ");
+            int id = Integer.parseInt(scanner.nextLine());
+
+            boolean success = userController.restoreUser(id);
+
+            System.out.println(success ?
+                    "User restored successfully." :
+                    "Restore failed.");
+
+        } catch (NumberFormatException e) {
+
+            System.out.println("Invalid ID. Please enter a number.");
+
+        }
     }
 
     private void searchUser() {
