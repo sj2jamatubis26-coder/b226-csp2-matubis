@@ -27,17 +27,17 @@ public class SongView {
             System.out.println("5. Archive Song");
             System.out.println("6. Restore Song");
             System.out.println("7. Search Song");
-            System.out.println("0. Exit");
+            System.out.println("0. Back to Main Menu");
             System.out.print("Enter choice: ");
             choice = scanner.nextInt();
             scanner.nextLine(); // consume newline
 
             switch (choice) {
                 case 0: {
-                    System.out.println("Thank you for using Recording studio app!");
-                    System.out.println("Good bye!");
+                    System.out.println("Returning to Main Menu...");
                     break;
                 }
+
                 case 1: {
                     System.out.println("=== Add Song ===");
 

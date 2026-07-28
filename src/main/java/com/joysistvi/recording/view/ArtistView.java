@@ -1,0 +1,161 @@
+package com.joysistvi.recording.view;
+
+import com.joysistvi.recording.controller.ArtistController;
+import com.joysistvi.recording.model.Artist;
+
+import java.util.List;
+import java.util.Scanner;
+
+public class ArtistView {
+
+    private final ArtistController artistController;
+    private final Scanner scanner = new Scanner(System.in);
+
+    // Constructor injection
+    public ArtistView(ArtistController artistController) {
+        this.artistController = artistController;
+    }
+
+    public void showMenu() {
+        int choice;
+        do {
+            System.out.println("\n--- Artist Menu ---");
+            System.out.println("1. Add Artist");
+            System.out.println("2. View All Artist");
+            System.out.println("3. Update Artist");
+            System.out.println("4. Delete Artist");
+            System.out.println("5. Archive Artist");
+            System.out.println("6. Restore Artist");
+            System.out.println("7. Search Artist");
+            System.out.println("0. Back to Main Menu");
+            System.out.print("Enter choice: ");
+            choice = scanner.nextInt();
+            scanner.nextLine(); // consume newline
+
+            switch (choice) {
+                case 0: {
+                    System.out.println("Returning to Main Menu...");
+                    break;
+                }
+
+                case 1: {
+                    System.out.println("=== Add Artist ===");
+
+                    System.out.print("Name: ");
+                    String name = scanner.nextLine();
+
+                    if (artistController.addArtist(name)) {
+                        System.out.println("Artist added successfully.");
+                    } else {
+                        System.out.println("Failed to add artist.");
+                    }
+
+                    break;
+                }
+                case 2: {
+                    System.out.println("View All Artists");
+
+                    for (Artist artist : artistController.listArtists()) {
+                        System.out.println(artist);
+                    }
+                    break;
+                }
+                default:
+                    System.out.println("Invalid choice");
+                case 3: {
+                    System.out.println("=== Update Artist ===");
+
+                    System.out.print("Enter Artist ID: ");
+                    int id = scanner.nextInt();
+                    scanner.nextLine();
+
+                    System.out.print("New Name: ");
+                    String name = scanner.nextLine();
+
+                    if (artistController.updateArtist(name, id)) {
+                        System.out.println("Artist updated successfully.");
+                    } else {
+                        System.out.println("Failed to update artist.");
+                    }
+
+                    break;
+                }
+                case 4: {
+                    System.out.println("=== Delete Artist ===");
+
+                    System.out.print("Enter Artist ID: ");
+                    int id = scanner.nextInt();
+                    scanner.nextLine();
+
+                    if (artistController.deleteArtist(id)) {
+                        System.out.println("Artist deleted successfully.");
+                    } else {
+                        System.out.println("Failed to delete artist.");
+                    }
+
+                    break;
+                }
+                case 5: {
+
+                    System.out.println("=== Archive Artist ===");
+
+                    System.out.print("Enter Artist ID: ");
+                    int id = scanner.nextInt();
+                    scanner.nextLine();
+
+                    if (artistController.archiveArtist(id)) {
+                        System.out.println("Artist archived successfully.");
+                    } else {
+                        System.out.println("Failed to archive artist.");
+                    }
+
+                    break;
+                }
+                case 6: {
+
+                    System.out.println("=== Restore Artist ===");
+                    System.out.println("\nArchived Artists:");
+
+                    for (Artist artist : artistController.listArchivedArtists()) {
+                        System.out.println(artist);
+                    }
+
+                    System.out.print("Enter Artist ID: ");
+                    int id = scanner.nextInt();
+                    scanner.nextLine();
+
+                    if (artistController.restoreArtist(id)) {
+                        System.out.println("Artist restored successfully.");
+                    } else {
+                        System.out.println("Failed to restore artist.");
+                    }
+
+                    break;
+                }
+                case 7: {
+
+                    System.out.println("=== Search Artist ===");
+
+                    System.out.print("Enter artist name: ");
+                    String keyword = scanner.nextLine();
+
+                    List<Artist> artists = artistController.searchArtists(keyword);
+
+                    if (artists.isEmpty()) {
+                        System.out.println("No artists found.");
+                    } else {
+
+                        System.out.println("\nSearch Result:");
+
+                        for (Artist artist : artists) {
+                            System.out.println(artist);
+                        }
+                    }
+
+                    break;
+                }
+            }
+        } while (choice != 0);
+    }
+
+}
