@@ -210,30 +210,46 @@ public class SongRepositoryImpl implements SongRepository{
                 "SELECT s.id, s.title, s.length, s.genre, a.name " +
                         "FROM songs s " +
                         "JOIN albums a ON s.album_id = a.id " +
-                        "WHERE LOWER(s.title) LIKE LOWER(?) " +
+                        "WHERE (LOWER(s.title) LIKE LOWER(?) " +
+                        "OR LOWER(s.genre) LIKE LOWER(?) " +
+                        "OR LOWER(a.name) LIKE LOWER(?)) " +
                         "AND s.is_archived = 0";
 
-        try (Connection conn = dbConnection.connect();
-             PreparedStatement prep = conn.prepareStatement(query)) {
 
-            prep.setString(1, "%" + keyword + "%");
+        try (Connection connection = dbConnection.connect();
+             PreparedStatement ps = connection.prepareStatement(query)) {
 
-            ResultSet res = prep.executeQuery();
 
-            while (res.next()) {
+            String search = "%" + keyword + "%";
 
-                songs.add(new Song(
-                        res.getInt("id"),
-                        res.getString("title"),
-                        res.getString("length"),
-                        res.getString("genre"),
-                        res.getString("name")
-                ));
+            ps.setString(1, search);
+            ps.setString(2, search);
+            ps.setString(3, search);
+
+
+            ResultSet rs = ps.executeQuery();
+
+
+            while (rs.next()) {
+
+                Song song = new Song();
+
+                song.setId(rs.getInt("id"));
+                song.setTitle(rs.getString("title"));
+                song.setLength(rs.getString("length"));
+                song.setGenre(rs.getString("genre"));
+                song.setAlbumName(rs.getString("name"));
+
+                songs.add(song);
             }
 
-        } catch (SQLException e) {
+
+        } catch (Exception e) {
+
             System.out.println("Search Song: " + e.getMessage());
+
         }
+
 
         return songs;
     }

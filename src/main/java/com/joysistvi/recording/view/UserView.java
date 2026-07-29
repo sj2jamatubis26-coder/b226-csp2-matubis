@@ -11,6 +11,8 @@ public class UserView {
     private final UserController userController;
     private final Scanner scanner = new Scanner(System.in);
 
+    private static final String ADMIN_PASSWORD = "RecordingAdmin2026";
+
     public UserView(UserController userController) {
         this.userController = userController;
     }
@@ -28,7 +30,7 @@ public class UserView {
             System.out.println("5. Archive User");
             System.out.println("6. Restore User");
             System.out.println("7. Search User");
-            System.out.println("8. Back to Main Menu");
+            System.out.println("0. Back to Main Menu");
             System.out.print("Choose option: ");
 
             try {
@@ -52,10 +54,10 @@ public class UserView {
                 default -> System.out.println("Invalid choice!");
             }
 
-        } while (choice != 9);
+        } while (choice != 0);
     }
 
-    private void addUser() {
+    public void addUser() {
 
         System.out.print("First Name: ");
         String firstName = scanner.nextLine();
@@ -72,8 +74,32 @@ public class UserView {
         System.out.print("Password: ");
         String password = scanner.nextLine();
 
-        System.out.print("Role: ");
+        System.out.print("Role (admin/user): ");
         String role = scanner.nextLine();
+
+        if (!role.equalsIgnoreCase("admin") &&
+                !role.equalsIgnoreCase("user")) {
+
+            System.out.println("Invalid role.");
+            System.out.println("Registration cancelled.");
+            return;
+        }
+
+        if (role.equalsIgnoreCase("admin")) {
+
+            System.out.print("Enter Admin Password: ");
+            String adminPassword = scanner.nextLine();
+
+            if (!adminPassword.equals(ADMIN_PASSWORD)) {
+
+                System.out.println("Invalid Admin Password.");
+                System.out.println("Administrator access denied.");
+                System.out.println("\nRegistration cancelled.");
+                return;
+            }
+            System.out.println("\nAdmin verified.");
+            System.out.println("Admin account creation authorized.");
+        }
 
         boolean success = userController.addUser(
                 firstName,
