@@ -54,13 +54,29 @@ public class AlbumView {
                     System.out.print("Name: ");
                     String name = scanner.nextLine();
 
-                    System.out.print("Year: ");
-                    int year = scanner.nextInt();
-
-                    System.out.print("Artist ID: ");
-                    int artistId;
-
+                    int year;
                     try {
+                        System.out.print("Year: ");
+                        year = Integer.parseInt(scanner.nextLine());
+                    } catch (NumberFormatException e) {
+                        System.out.println("Invalid Year. Please enter a number.");
+                        break;
+                    }
+
+                    int artistId;
+                    try {
+                        System.out.println("\nAvailable Artists:");
+
+                        List<Artist> artists = artistController.getAllArtists();
+
+                        for (Artist artist : artists) {
+                            System.out.println(
+                                    "ID: " + artist.getId() +
+                                            " | Name: " + artist.getName()
+                            );
+                        }
+
+                        System.out.print("\nArtist ID: ");
                         artistId = Integer.parseInt(scanner.nextLine());
                     } catch (NumberFormatException e) {
                         System.out.println("Invalid Artist ID. Please enter a number.");
@@ -69,8 +85,6 @@ public class AlbumView {
 
                     if (albumController.addAlbum(name, year, artistId)) {
                         System.out.println("Album added successfully.");
-                    } else {
-                        System.out.println("Failed to add album.");
                     }
 
                     break;

@@ -17,6 +17,7 @@ public interface SongRepository {
     public boolean restoreSong(int id);
     public  List<Song> getArchivedSongs();
     public List<Song> searchSongs(String keyword);
+    boolean songExists(String title, int albumId);
 
 
 }

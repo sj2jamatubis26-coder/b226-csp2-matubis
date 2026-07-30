@@ -16,8 +16,39 @@ public class UserService {
     }
 
     public boolean addUser(User user) {
+
         if (user.getFirstName() == null || user.getFirstName().trim().isEmpty()) {
             System.out.println("First name cannot be empty.");
+            return false;
+        }
+
+        if (user.getLastName() == null || user.getLastName().trim().isEmpty()) {
+            System.out.println("Last name cannot be empty.");
+            return false;
+        }
+
+        if (user.getUsername() == null || user.getUsername().trim().isEmpty()) {
+            System.out.println("Username cannot be empty.");
+            return false;
+        }
+
+        if (user.getEmail() == null || user.getEmail().trim().isEmpty()) {
+            System.out.println("Email cannot be empty.");
+            return false;
+        }
+
+        if (user.getPassword() == null || user.getPassword().trim().isEmpty()) {
+            System.out.println("Password cannot be empty.");
+            return false;
+        }
+
+        if (user.getRole() == null || user.getRole().trim().isEmpty()) {
+            System.out.println("Role cannot be empty.");
+            return false;
+        }
+
+        if (userRepo.userExists(user.getUsername())) {
+            System.out.println("Username already exists.");
             return false;
         }
 

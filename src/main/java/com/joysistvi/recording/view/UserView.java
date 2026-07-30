@@ -107,8 +107,7 @@ public class UserView {
                 username,
                 email,
                 password,
-                role
-        );
+                role);
 
         System.out.println(success ? "User added successfully." : "Failed to add user.");
     }

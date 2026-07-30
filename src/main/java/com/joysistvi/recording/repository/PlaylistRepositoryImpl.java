@@ -70,6 +70,7 @@ public class PlaylistRepositoryImpl implements PlaylistRepository {
 
     @Override
     public List<Playlist> getPlaylistsByUserId(int userId) {
+        System.out.println("Searching playlists for User ID: " + userId);
 
         List<Playlist> playlists = new ArrayList<>();
 
@@ -266,5 +267,113 @@ public class PlaylistRepositoryImpl implements PlaylistRepository {
             e.printStackTrace();
             return false;
         }
+    }
+    @Override
+    public boolean removeSongFromPlaylist(int playlistId, int songId) {
+
+        String query = """
+            DELETE FROM playlist_songs
+            WHERE playlist_id = ?
+            AND song_id = ?
+            """;
+
+        try (Connection conn = dbConnection.connect();
+             PreparedStatement prep = conn.prepareStatement(query)) {
+
+            prep.setInt(1, playlistId);
+            prep.setInt(2, songId);
+
+            return prep.executeUpdate() > 0;
+
+        } catch (SQLException e) {
+            System.out.println("Remove Song from Playlist: " + e.getMessage());
+        }
+
+        return false;
+    }
+    @Override
+    public List<String> getSongsInPlaylist(int playlistId) {
+
+        List<String> songs = new ArrayList<>();
+
+        String query = """
+        SELECT s.id, s.title
+        FROM playlist_songs ps
+        JOIN songs s
+        ON ps.song_id = s.id
+        WHERE ps.playlist_id = ?
+        """;
+
+        try (Connection conn = dbConnection.connect();
+             PreparedStatement prep = conn.prepareStatement(query)) {
+
+            prep.setInt(1, playlistId);
+
+            ResultSet rs = prep.executeQuery();
+
+            while (rs.next()) {
+                songs.add(
+                        rs.getInt("id") +
+                                " - " +
+                                rs.getString("title")
+                );
+            }
+
+        } catch (SQLException e) {
+            System.out.println("View Playlist Songs: " + e.getMessage());
+        }
+
+        return songs;
+    }
+
+    @Override
+    public boolean addSongToPlaylist(int playlistId, int songId) {
+
+        String query = """
+        INSERT INTO playlist_songs (playlist_id, song_id)
+        VALUES (?, ?)
+        """;
+
+        try (Connection conn = dbConnection.connect();
+             PreparedStatement prep = conn.prepareStatement(query)) {
+
+            prep.setInt(1, playlistId);
+            prep.setInt(2, songId);
+
+            return prep.executeUpdate() > 0;
+
+        } catch (SQLException e) {
+            System.out.println("Add Song to Playlist: " + e.getMessage());
+        }
+
+        return false;
+    }
+    @Override
+    public boolean songExistsInPlaylist(int playlistId, int songId) {
+
+        String query = """
+        SELECT COUNT(*)
+        FROM playlist_songs
+        WHERE playlist_id = ?
+        AND song_id = ?
+        """;
+
+        try (Connection conn = dbConnection.connect();
+             PreparedStatement prep = conn.prepareStatement(query)) {
+
+            prep.setInt(1, playlistId);
+            prep.setInt(2, songId);
+
+            ResultSet rs = prep.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Check Playlist Song: " + e.getMessage());
+        }
+
+        return false;
     }
 }

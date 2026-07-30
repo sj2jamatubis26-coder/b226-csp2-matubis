@@ -75,7 +75,7 @@ public class SongView {
                     System.out.println();
                     System.out.print("Enter Album ID: ");
 
-                    System.out.print("Album ID: ");
+
                     int albumId;
 
                     try {
@@ -87,20 +87,26 @@ public class SongView {
 
                     if (songController.addSong(title, length, genre, albumId)) {
                         System.out.println("Song added successfully.");
-                    } else {
-                        System.out.println("Failed to add song.");
-                    }
-
-                    break;
-                }
-                case 2: {
-                    System.out.println("View All Songs");
-
-                    for (Song song : songController.listSongs()) {
-                        System.out.println(song);
                     }
                     break;
                 }
+                    case 2: {
+                        System.out.println("View All Songs\n");
+
+                        System.out.printf("%-4s %-25s %-20s %-20s%n",
+                                "ID", "Title", "Artist", "Album");
+                        System.out.println("--------------------------------------------------------------------------");
+
+                        for (Song song : songController.listSongs()) {
+                            System.out.printf("%-4d %-25s %-20s %-20s%n",
+                                    song.getId(),
+                                    song.getTitle(),
+                                    song.getArtistName(),
+                                    song.getAlbumName());
+                        }
+
+                        break;
+                    }
 
                 case 3: {
 

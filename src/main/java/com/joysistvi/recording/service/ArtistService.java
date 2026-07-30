@@ -18,8 +18,14 @@ public class ArtistService {
     }
 
     public boolean addArtist(Artist artist) {
-        if (artist.getName() == null || artist.getName().trim().isEmpty() ) {
-            System.out.println("Artist name cannot be empty");
+
+        if (artist.getName() == null || artist.getName().trim().isEmpty()) {
+            System.out.println("Artist name cannot be empty.");
+            return false;
+        }
+
+        if (artistRepo.artistExists(artist.getName())) {
+            System.out.println("Artist already exists.");
             return false;
         }
 
@@ -33,6 +39,10 @@ public class ArtistService {
 
         if (name == null || name.trim().isEmpty()) {
             System.out.println("Artist name cannot be empty. ");
+            return false;
+        }
+        if (artistRepo.artistExists(name)) {
+            System.out.println("Artist already exists.");
             return false;
         }
         return artistRepo.updateArtist(name, artistId);
@@ -80,6 +90,9 @@ public class ArtistService {
         }
 
         return artistRepo.searchArtists(keyword);
+    }
+    public List<Artist> getAllArtists() {
+        return artistRepo.getAllArtists();
     }
 
 }

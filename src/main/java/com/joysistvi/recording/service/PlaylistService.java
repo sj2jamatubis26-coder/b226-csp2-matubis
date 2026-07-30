@@ -25,10 +25,15 @@ public class PlaylistService {
         return playlistRepo.createPlaylist(playlist);
     }
 
-    public List<Playlist> listPlaylists() {
-        return playlistRepo.getAllPlaylists();
-    }
+    public List<Playlist> getPlaylistsByUserId(int userId) {
 
+        if (userId <= 0) {
+            System.out.println("Invalid User ID.");
+            return List.of();
+        }
+
+        return playlistRepo.getPlaylistsByUserId(userId);
+    }
     public boolean updatePlaylist(Playlist playlist) {
 
         if (playlist.getName() == null || playlist.getName().trim().isEmpty()) {
@@ -73,6 +78,7 @@ public class PlaylistService {
         return playlistRepo.getArchivedPlaylists();
     }
 
+
     public List<Playlist> searchPlaylists(String keyword) {
 
         if (keyword == null || keyword.trim().isEmpty()) {
@@ -83,4 +89,40 @@ public class PlaylistService {
         return playlistRepo.searchPlaylistByName(keyword);
     }
 
+    public boolean removeSongFromPlaylist(int playlistId, int songId) {
+
+        if (playlistId <= 0 || songId <= 0) {
+            System.out.println("Invalid Playlist ID or Song ID.");
+            return false;
+        }
+
+        return playlistRepo.removeSongFromPlaylist(playlistId, songId);
+    }
+
+    public List<Playlist> listPlaylists() {
+        return playlistRepo.getAllPlaylists();
+    }
+    public List<String> getSongsInPlaylist(int playlistId) {
+
+        if (playlistId <= 0) {
+            System.out.println("Invalid Playlist ID.");
+            return List.of();
+        }
+
+        return playlistRepo.getSongsInPlaylist(playlistId);
+    }
+    public boolean addSongToPlaylist(int playlistId, int songId) {
+
+        if (playlistId <= 0 || songId <= 0) {
+            System.out.println("Invalid Playlist ID or Song ID.");
+            return false;
+        }
+
+        if (playlistRepo.songExistsInPlaylist(playlistId, songId)) {
+            System.out.println("Song already exists in this playlist.");
+            return false;
+        }
+
+        return playlistRepo.addSongToPlaylist(playlistId, songId);
+    }
 }

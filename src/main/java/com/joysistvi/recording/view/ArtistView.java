@@ -50,10 +50,7 @@ public class ArtistView {
 
                     if (artistController.addArtist(name)) {
                         System.out.println("Artist added successfully.");
-                    } else {
-                        System.out.println("Failed to add artist.");
                     }
-
                     break;
                 }
                 case 2: {

@@ -48,4 +48,6 @@ public class ArtistController {
     public List<Artist> searchArtists(String keyword) {
         return artistService.searchArtists(keyword);
     }
+
+    public List<Artist> getAllArtists() { return artistService.getAllArtists(); }
 }

@@ -10,18 +10,16 @@ public class PlaylistController {
 
     private final PlaylistService playlistService;
 
-    // Constructor injection
     public PlaylistController(PlaylistService playlistService) {
         this.playlistService = playlistService;
     }
-
 
     public boolean addPlaylist(Playlist playlist) {
         return playlistService.addPlaylist(playlist);
     }
 
-    public List<Playlist> listPlaylists() {
-        return playlistService.listPlaylists();
+    public List<Playlist> getPlaylistsByUserId(int userId) {
+        return playlistService.getPlaylistsByUserId(userId);
     }
 
     public boolean updatePlaylist(Playlist playlist) {
@@ -48,5 +46,16 @@ public class PlaylistController {
         return playlistService.searchPlaylists(keyword);
     }
 
-
+    public boolean removeSongFromPlaylist(int playlistId, int songId) {
+        return playlistService.removeSongFromPlaylist(playlistId, songId);
+    }
+    public List<Playlist> listPlaylists() {
+        return playlistService.listPlaylists();
+    }
+    public List<String> getSongsInPlaylist(int playlistId) {
+        return playlistService.getSongsInPlaylist(playlistId);
+    }
+    public boolean addSongToPlaylist(int playlistId, int songId) {
+        return playlistService.addSongToPlaylist(playlistId, songId);
+    }
 }

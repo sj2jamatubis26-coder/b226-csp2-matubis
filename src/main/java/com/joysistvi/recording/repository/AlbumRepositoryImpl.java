@@ -221,6 +221,30 @@ public boolean updateAlbum(String name, int year, int artistId, int id) {
 
         return albums;
 }
+
+    @Override
+    public boolean albumExists(String name, int artistId) {
+
+        String sql = "SELECT COUNT(*) FROM albums WHERE name = ? AND artist_id = ? AND is_archived = 0";
+
+        try (Connection conn = dbConnection.connect();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, name);
+            ps.setInt(2, artistId);
+
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
 }
 
 

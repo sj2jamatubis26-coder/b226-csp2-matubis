@@ -1,29 +1,30 @@
 package com.joysistvi.recording.view;
 
 
+import com.joysistvi.recording.model.User;
+
 import java.util.Scanner;
 
 public class UserDashboardView {
 
-    private final SongView songUserView;
-    private final AlbumView albumUserView;
+    private final SongUserView songUserView;
+    private final AlbumUserView albumUserView;
     private final ArtistUserView artistUserView;
-    private final PlaylistView playlistView;
-
+    private final PlaylistUserView playlistUserView;
     private final Scanner scanner = new Scanner(System.in);
 
     public UserDashboardView(
-            SongView songView,
-            AlbumView albumView,
+            SongUserView songUserView,
+            AlbumUserView albumUserView,
             ArtistUserView artistUserView,
-            PlaylistView playlistView) {
+            PlaylistUserView playlistUserView) {
 
-        this.songView = songView;
-        this.albumView = albumView;
+        this.songUserView = songUserView;
+        this.albumUserView = albumUserView;
         this.artistUserView = artistUserView;
-        this.playlistView = playlistView;
+        this.playlistUserView = playlistUserView;
     }
-    public void showMenu() {
+    public void showMenu(User user) {
 
         int choice;
 
@@ -59,7 +60,8 @@ public class UserDashboardView {
                     break;
 
                 case 4:
-                    playlistView.showMenu();
+                    System.out.println("Logged in User ID: " + user.getId());
+                    playlistUserView.showMenu(user.getId());
                     break;
 
                 case 0:

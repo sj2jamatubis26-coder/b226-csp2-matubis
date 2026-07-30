@@ -27,4 +27,5 @@ public interface UserRepository {
     List<User> getArchivedUsers();
 
     List<User> searchUsers(String keyword);
+    boolean userExists(String username);
 }

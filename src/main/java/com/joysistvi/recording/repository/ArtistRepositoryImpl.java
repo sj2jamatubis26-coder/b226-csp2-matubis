@@ -224,6 +224,28 @@ public class ArtistRepositoryImpl implements ArtistRepository{
 
         return artists;
     }
+    @Override
+    public boolean artistExists(String name) {
+
+        String sql = "SELECT COUNT(*) FROM artists WHERE name = ? AND is_archived = 0";
+
+        try (Connection conn = dbConnection.connect();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, name);
+
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
 
 
 }

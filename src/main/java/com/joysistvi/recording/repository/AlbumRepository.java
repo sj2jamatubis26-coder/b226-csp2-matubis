@@ -21,5 +21,7 @@ public interface AlbumRepository {
         List<Album> getArchivedAlbums();
 
         List<Album> searchAlbums(String keyword);
+
+        boolean albumExists(String name, int artistId);
     }
 

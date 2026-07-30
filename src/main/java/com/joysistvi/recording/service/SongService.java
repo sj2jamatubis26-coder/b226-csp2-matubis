@@ -36,6 +36,10 @@ public class SongService {
             System.out.println("Invalid Album ID.");
             return false;
         }
+        if (songRepo.songExists(song.getTitle(), song.getAlbumId())) {
+            System.out.println("Song already exists in this album.");
+            return false;
+        }
 
         return songRepo.createSong(song);
     }

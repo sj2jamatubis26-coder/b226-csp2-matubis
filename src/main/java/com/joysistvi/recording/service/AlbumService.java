@@ -16,8 +16,14 @@ public class AlbumService {
     }
 
     public boolean addAlbum(Album album) {
-        if (album.getName() == null || album.getName().trim().isEmpty() ) {
-            System.out.println("Album name cannot be empty");
+
+        if (album.getName() == null || album.getName().trim().isEmpty()) {
+            System.out.println("Album name cannot be empty.");
+            return false;
+        }
+
+        if (albumRepo.albumExists(album.getName(), album.getArtistId())) {
+            System.out.println("Album already exists for this artist.");
             return false;
         }
 
@@ -81,5 +87,6 @@ public class AlbumService {
 
         return albumRepo.searchAlbums(keyword);
     }
+
 
 }

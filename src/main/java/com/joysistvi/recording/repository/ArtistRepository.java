@@ -17,6 +17,7 @@ public interface ArtistRepository {
     public boolean restoreArtist(int id);
     public  List<Artist> getArchivedArtists();
     public List<Artist> searchArtists(String keyword);
+    boolean artistExists(String name);
 
 
 }

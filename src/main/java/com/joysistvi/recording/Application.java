@@ -78,6 +78,8 @@ public class Application {
         PlaylistService playlistService = new PlaylistService(playlistRepository);
         PlaylistController playlistController = new PlaylistController(playlistService);
         PlaylistView playlistView = new PlaylistView(playlistController, userController);
+        PlaylistUserView playlistUserView =
+                new PlaylistUserView(playlistController, songController);
 
 
         AdminDashboardView adminDashboardView =
@@ -90,10 +92,10 @@ public class Application {
 
         UserDashboardView userDashboardView =
                 new UserDashboardView(
-                        songView,
-                        albumView,
+                        songUserView,
+                        albumUserView,
                         artistUserView,
-                        playlistView
+                        playlistUserView
                 );
         LoginView loginView =
                 new LoginView(

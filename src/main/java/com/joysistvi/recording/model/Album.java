@@ -65,5 +65,10 @@ public class Album {
                 ", Year: " + year +
                 ", Artist: " + artistName;
     }
+    public Album(String name, int year, int artistId) {
+        this.name = name;
+        this.year = year;
+        this.artistId = artistId;
+    }
 }
 

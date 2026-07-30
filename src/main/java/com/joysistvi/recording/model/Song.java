@@ -11,17 +11,19 @@ public class Song {
     private String length;
     private String genre;
     private String albumName;
+    private String artistName;
     private int albumId;
 
     public Song() {
     }
 
-    public Song(int id, String title, String length, String genre, String albumName) {
+    public Song(int id, String title, String length, String genre, String albumName, String artistName) {
         this.id = id;
         this.title = title;
         this.length = length;
         this.genre = genre;
         this.albumName = albumName;
+        this.artistName = artistName;
     }
 
     public Song(String title, String length, String genre, int albumId) {
@@ -75,18 +77,21 @@ public class Song {
         return albumName;
     }
 
+    public String getArtistName() { return artistName; }
+
     public void setAlbumName(String albumName) {
         this.albumName = albumName;
     }
+    public void setArtistName(String artistName) { this.artistName = artistName; }
 
     @Override
     public String toString() {
-        return "Song{" +
-                "id=" + id +
-                ", title='" + title + '\'' +
-                ", length='" + length + '\'' +
-                ", genre='" + genre + '\'' +
-                ", albumName='" + albumName + '\'' +
-                '}';
+        return String.format(
+                "%-4d %-20s %-20s %-20s",
+                id,
+                title,
+                artistName,
+                albumName
+        );
     }
 }

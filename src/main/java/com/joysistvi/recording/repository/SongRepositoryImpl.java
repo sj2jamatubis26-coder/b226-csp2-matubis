@@ -23,9 +23,12 @@ public class SongRepositoryImpl implements SongRepository{
     @Override
     public List<Song> getAllSongs() {
         List<Song> songs = new ArrayList<>();
-        String query = "SELECT s.id, s.title, s.length, s.genre, a.name " +
+        String query =  "SELECT s.id, s.title, s.length, s.genre, " +
+                "a.name AS album_name, " +
+                "ar.name AS artist_name " +
                 "FROM songs s " +
                 "JOIN albums a ON s.album_id = a.id " +
+                "JOIN artists ar ON a.artist_id = ar.id " +
                 "WHERE s.is_archived = 0";
 
         try (Connection conn = dbConnection.connect();
@@ -39,9 +42,9 @@ public class SongRepositoryImpl implements SongRepository{
                         res.getString("title"),
                         res.getString("length"),
                         res.getString("genre"),
-                        res.getString("name")
+                        res.getString("album_name"),
+                        res.getString("artist_name")
                 ));
-
             }
 
         } catch (SQLException e) {
@@ -174,9 +177,10 @@ public class SongRepositoryImpl implements SongRepository{
         List<Song> songs = new ArrayList<>();
 
         String query =
-                "SELECT s.id, s.title, s.length, s.genre, a.name " +
+                "SELECT s.id, s.title, s.length, s.genre, a.name As album_name, ar.name AS artist_name " +
                         "FROM songs s " +
                         "JOIN albums a ON s.album_id = a.id " +
+                        "JOIN artists ar ON a.artist_id = ar.id" +
                         "WHERE s.is_archived = 1";
 
         try (Connection conn = dbConnection.connect();
@@ -189,7 +193,8 @@ public class SongRepositoryImpl implements SongRepository{
                         res.getString("title"),
                         res.getString("length"),
                         res.getString("genre"),
-                        res.getString("name")
+                        res.getString("album_name"),
+                        res.getString("artist_name")
                 ));
             }
 
@@ -210,6 +215,7 @@ public class SongRepositoryImpl implements SongRepository{
                 "SELECT s.id, s.title, s.length, s.genre, a.name " +
                         "FROM songs s " +
                         "JOIN albums a ON s.album_id = a.id " +
+                        "JOIN artists ar ON a.artist_id = ar.id " +
                         "WHERE (LOWER(s.title) LIKE LOWER(?) " +
                         "OR LOWER(s.genre) LIKE LOWER(?) " +
                         "OR LOWER(a.name) LIKE LOWER(?)) " +
@@ -252,6 +258,29 @@ public class SongRepositoryImpl implements SongRepository{
 
 
         return songs;
+    }
+    @Override
+    public boolean songExists(String title, int albumId) {
+
+        String sql = "SELECT COUNT(*) FROM songs WHERE title = ? AND album_id = ? AND is_archived = 0";
+
+        try (Connection conn = dbConnection.connect();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, title);
+            ps.setInt(2, albumId);
+
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return false;
     }
 
 

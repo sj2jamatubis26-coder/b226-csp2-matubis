@@ -25,4 +25,11 @@ public interface PlaylistRepository {
     boolean archivePlaylist(int id);
 
     boolean restorePlaylist(int id);
+
+    boolean removeSongFromPlaylist(int playlistId, int songId);
+
+    List<String> getSongsInPlaylist(int playlistId);
+
+    boolean addSongToPlaylist(int playlistId, int songId);
+    boolean songExistsInPlaylist(int playlistId, int songId);
 }

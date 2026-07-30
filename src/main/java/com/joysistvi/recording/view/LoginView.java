@@ -47,7 +47,7 @@ public class LoginView {
 
         } else {
 
-            userDashboardView.showMenu();
+            userDashboardView.showMenu(user);
 
         }
     }
