@@ -1,42 +1,12 @@
 package com.joysistvi.recording;
 
 import com.joysistvi.recording.config.DbConnection;
-import java.util.Scanner;
-import com.joysistvi.recording.controller.LoginController;
-import com.joysistvi.recording.view.AlbumUserView;
-
-
-import com.joysistvi.recording.repository.LoginRepository;
-import com.joysistvi.recording.repository.LoginRepositoryImpl;
-
-import com.joysistvi.recording.service.LoginService;
-
+import com.joysistvi.recording.controller.*;
+import com.joysistvi.recording.repository.*;
+import com.joysistvi.recording.service.*;
 import com.joysistvi.recording.view.*;
 
-import com.joysistvi.recording.controller.AlbumController;
-import com.joysistvi.recording.controller.ArtistController;
-import com.joysistvi.recording.controller.SongController;
-import com.joysistvi.recording.controller.UserController;
-
-import com.joysistvi.recording.repository.AlbumRepository;
-import com.joysistvi.recording.repository.ArtistRepository;
-import com.joysistvi.recording.repository.SongRepository;
-import com.joysistvi.recording.repository.UserRepository;
-
-import com.joysistvi.recording.repository.AlbumRepositoryImpl;
-import com.joysistvi.recording.repository.ArtistRepositoryImpl;
-import com.joysistvi.recording.repository.SongRepositoryImpl;
-import com.joysistvi.recording.repository.UserRepositoryImpl;
-
-import com.joysistvi.recording.service.AlbumService;
-import com.joysistvi.recording.service.ArtistService;
-import com.joysistvi.recording.service.SongService;
-import com.joysistvi.recording.service.UserService;
-
-import com.joysistvi.recording.controller.PlaylistController;
-import com.joysistvi.recording.repository.PlaylistRepository;
-import com.joysistvi.recording.repository.PlaylistRepositoryImpl;
-import com.joysistvi.recording.service.PlaylistService;
+import java.util.Scanner;
 
 public class Application {
 

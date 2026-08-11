@@ -212,29 +212,29 @@ public class SongRepositoryImpl implements SongRepository{
         List<Song> songs = new ArrayList<>();
 
         String query =
-                "SELECT s.id, s.title, s.length, s.genre, a.name " +
+                "SELECT s.id, s.title, s.length, s.genre, " +
+                        "a.name AS album_name, " +
+                        "ar.name AS artist_name " +
                         "FROM songs s " +
                         "JOIN albums a ON s.album_id = a.id " +
                         "JOIN artists ar ON a.artist_id = ar.id " +
                         "WHERE (LOWER(s.title) LIKE LOWER(?) " +
                         "OR LOWER(s.genre) LIKE LOWER(?) " +
-                        "OR LOWER(a.name) LIKE LOWER(?)) " +
+                        "OR LOWER(a.name) LIKE LOWER(?) " +
+                        "OR LOWER(ar.name) LIKE LOWER(?)) " +
                         "AND s.is_archived = 0";
-
 
         try (Connection connection = dbConnection.connect();
              PreparedStatement ps = connection.prepareStatement(query)) {
-
 
             String search = "%" + keyword + "%";
 
             ps.setString(1, search);
             ps.setString(2, search);
             ps.setString(3, search);
-
+            ps.setString(4, search);
 
             ResultSet rs = ps.executeQuery();
-
 
             while (rs.next()) {
 
@@ -244,18 +244,17 @@ public class SongRepositoryImpl implements SongRepository{
                 song.setTitle(rs.getString("title"));
                 song.setLength(rs.getString("length"));
                 song.setGenre(rs.getString("genre"));
-                song.setAlbumName(rs.getString("name"));
+                song.setAlbumName(rs.getString("album_name"));
+                song.setArtistName(rs.getString("artist_name"));
 
                 songs.add(song);
             }
 
-
-        } catch (Exception e) {
+        } catch (SQLException e) {
 
             System.out.println("Search Song: " + e.getMessage());
 
         }
-
 
         return songs;
     }
